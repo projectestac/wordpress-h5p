@@ -391,6 +391,36 @@ class H5P_Plugin_Admin {
    *
    * @since 1.0.0
    */
+
+// XTEC ************ MODIFICAT - Move menu in admin page to submenu in 'Options'.
+// 2023.11.09 @aginard
+    public function add_plugin_admin_menu() {
+        // Settings page
+        add_options_page('H5P Settings', 'H5P', 'manage_options', $this->plugin_slug . '_settings', array($this, 'display_settings_page'));
+
+        // H5P Content pages
+        $all_h5p_content = (current_user_can('view_others_h5p_contents') == true) ? __('All H5P Content', $this->plugin_slug) : __('My H5P Content', $this->plugin_slug);
+        add_options_page($all_h5p_content, $all_h5p_content, 'view_h5p_contents', $this->plugin_slug, array($this->content, 'display_contents_page'));
+
+        $add_new = __('Add New', $this->plugin_slug);
+        $contents_page = add_options_page($add_new, $add_new, 'edit_h5p_contents', $this->plugin_slug . '_new', array($this->content, 'display_new_content_page'));
+
+        // Process form data when saving H5Ps.
+        add_action('load-' . $contents_page, array($this->content, 'process_new_content'));
+
+        $libraries = __('Libraries', $this->plugin_slug);
+        $libraries_page = add_options_page($libraries, $libraries, 'manage_h5p_libraries', $this->plugin_slug . '_libraries', array($this->library, 'display_libraries_page'));
+
+        // Process form data when upload H5Ps without content.
+        add_action('load-' . $libraries_page, array($this->library, 'process_libraries'));
+
+        if (get_option('h5p_track_user', TRUE)) {
+            $my_results = __('My Results', $this->plugin_slug);
+            add_options_page($my_results, $my_results, 'view_h5p_results', $this->plugin_slug . '_results', array($this, 'display_results_page'));
+        }
+    }
+// ************ ORIGINAL
+/*
   public function add_plugin_admin_menu() {
     // H5P Content pages
     $h5p_content = __('H5P Content', $this->plugin_slug);
@@ -419,6 +449,8 @@ class H5P_Plugin_Admin {
     // Settings page
     add_options_page('H5P Settings', 'H5P', 'manage_options', $this->plugin_slug . '_settings', array($this, 'display_settings_page'));
   }
+*/
+// ************ FI
 
   /**
    * Display a settings page for H5P.
