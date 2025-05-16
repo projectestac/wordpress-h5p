@@ -550,7 +550,15 @@ class H5P_Plugin_Admin {
    * @return string
    */
   public function alter_title($admin_title, $title) {
+
+    // XTEC ************ MODIFICAT - Fixing: Deprecated: Constant FILTER_SANITIZE_STRING is deprecated
+    // 2025.05.16 @corentin.robin
+    $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    // ************ ORIGINAL
+    /*
     $page = filter_input(INPUT_GET, 'page', FILTER_SANITIZE_STRING);
+    */
+    // ************ FI
 
     switch ($page) {
       case 'h5p':
